@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { NextFunction, Request, Response } from 'express';
 import { HttpError } from 'src/Exeptions/HttpError';
 import jwt from 'jsonwebtoken';
