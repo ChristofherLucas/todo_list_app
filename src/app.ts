@@ -9,7 +9,7 @@ app.use(express.json());
 (async () => {
   try {
     await DB.authenticate(); // conecta no banco
-    // await DB.sync(); // sincroniza o banco com os models (cria as tabelas)
+    // await DB.sync({ force: true }); // sincroniza o banco com os models (cria as tabelas)
     app.emit('db connected');
   } catch (error) {
     console.log('Failed to connect database');

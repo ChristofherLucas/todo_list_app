@@ -13,15 +13,6 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  async getUserById(id: string): Promise<UserDTO> {
-    const user = await this.userModel.findOne({
-      where: {
-        user_id: id
-      }
-    });
-    return user?.get() as UserDTO;
-  }
-
   async getUserByEmail(email: string): Promise<UserDTO> {
     const user = await this.userModel.findOne({
       where: {
