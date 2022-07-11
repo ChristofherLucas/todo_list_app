@@ -1,5 +1,6 @@
 import express from 'express';
-import { router } from './routes';
+import { router as userRoutes } from './routes/UserRoutes';
+import { router as workspaceRoutes } from './routes/WorkspaceRoutes';
 import { DB } from './config/DB';
 
 const app = express();
@@ -17,6 +18,6 @@ app.use(express.json());
   }
 })();
 
-app.use('/api', router);
-
+app.use('/api', userRoutes);
+app.use('/api', workspaceRoutes);
 export { app };

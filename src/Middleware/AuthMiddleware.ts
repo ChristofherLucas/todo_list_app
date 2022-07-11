@@ -7,25 +7,32 @@ export class AuthMiddleware {
   async tokenVerify(req: Request, res: Response, next: NextFunction) {
     const authorization = req.headers.authorization;
     try {
-      if (!authorization) throw new HttpError(401, 'Login required!');
+      if (!authorization) throw new HttpError(400, 'Login required');
 
-      const tokenSchema = authorization.split('');
-      if (tokenSchema.length < 2)
-        throw new HttpError(400, 'badly formatted token');
+      const tokenSchema = authorization.split(' ');
+      if (tokenSchema.length < 2) throw new HttpError(400, 'Invalid token');
 
       const [prefix, token] = tokenSchema;
-      const parts = token.split('.').filter((value) => !!value);
+      const tokenParts = token.split('.').filter((values) => !!values);
+
       if (!/^Bearer$/i.test(prefix)) throw new HttpError(400, 'Invalid prefix');
 
-      if (parts.length < 3) throw new HttpError(400, 'badly formatted token');
+      if (tokenParts.length < 3)
+        throw new HttpError(400, 'badly formatted token');
 
-      const validToken = jwt.verify(token, process.env.SECRET_KEY as string);
-      if (!validToken) throw new HttpError(400, 'Invalid token');
+      const isValidToken = jwt.verify(token, process.env.SECRET_KEY as string);
+      if (!isValidToken) throw new HttpError(400, 'Invalid token');
 
       next();
-    } catch (error) {
-      console.error(error);
-      return res.status(401).json({ error });
+    } catch (err) {
+      return res.status(400).json({ error: err });
     }
+  }
+
+  getUserLogged(authorization: string | undefined) {
+    if (!authorization) throw new HttpError(401, 'Login required!');
+    const [prefix, token] = authorization.split(' ');
+
+    return jwt.verify(token, process.env.SECRET_KEY as string);
   }
 }

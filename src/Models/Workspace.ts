@@ -1,27 +1,32 @@
 import { DataTypes } from 'sequelize';
 import { DB } from 'src/config/DB';
-import { UserDTO } from 'src/Interfaces/@DTO/UserDTO';
+import { WorkspaceDTO } from 'src/Interfaces/@DTO/WorkspaceDTO';
 import { IModel } from 'src/Interfaces/@Models/IModel';
+import { User } from './User';
 
-const User: IModel<UserDTO> = DB.define('users', {
-  user_id: {
+const Workspace: IModel<WorkspaceDTO> = DB.define('workspaces', {
+  workspace_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false
   },
-  user_name: {
+  workspace_name: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  password: {
+  description: {
     type: DataTypes.STRING,
     allowNull: false
   }
 });
 
-export { User };
+Workspace.belongsTo(User, {
+  constraints: true,
+  foreignKey: {
+    name: 'fk_user_id',
+    allowNull: false
+  }
+});
+
+export { Workspace };
